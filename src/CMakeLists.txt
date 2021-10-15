@@ -515,8 +515,10 @@ if (BUILD_SHARED_LIBS)
   endif()
 endif()
 
-if(LIBM_LIBRARIES)
-  target_link_libraries(libluajit ${LIBM_LIBRARIES})
+if (NOT MINGW)
+  if(LIBM_LIBRARIES)
+    target_link_libraries(libluajit ${LIBM_LIBRARIES})
+  endif()
 endif()
 
 if (LIBDL_LIBRARIES)
