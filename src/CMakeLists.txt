@@ -515,6 +515,10 @@ if (BUILD_SHARED_LIBS)
   endif()
 endif()
 
+if (MSVC)
+  set_target_properties(libluajit PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
 if (NOT MINGW)
   if(LIBM_LIBRARIES)
     target_link_libraries(libluajit ${LIBM_LIBRARIES})
@@ -555,6 +559,10 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES "(Open|Free|Net)BSD")
   target_link_libraries(luajit c++abi pthread)
 endif()
 target_compile_definitions(luajit PRIVATE ${LJ_DEFINITIONS})
+
+if (MSVC)
+  set_target_properties(luajit PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+endif()
 
 set(luajit_headers lauxlib.h lua.h luaconf.h luajit.h lualib.h)
 install(FILES ${luajit_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/luajit)
