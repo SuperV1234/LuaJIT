@@ -1,5 +1,7 @@
 *.[oa]
 *.so
+build
+buildandroid
 *.obj
 *.lib
 *.exp
