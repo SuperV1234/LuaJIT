@@ -1,6 +1,6 @@
 /*
 ** Load and dump code.
-** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2022 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #include <errno.h>
@@ -15,13 +15,14 @@
 #include "lj_obj.h"
 #include "lj_gc.h"
 #include "lj_err.h"
-#include "lj_str.h"
+#include "lj_buf.h"
 #include "lj_func.h"
 #include "lj_frame.h"
 #include "lj_vm.h"
 #include "lj_lex.h"
 #include "lj_bcdump.h"
 #include "lj_parse.h"
+#include "lj_fopen.h"
 
 /* -- Load Lua source code and bytecode ----------------------------------- */
 
@@ -54,7 +55,7 @@ LUA_API int lua_loadx(lua_State *L, lua_Reader reader, void *data,
   ls.rdata = data;
   ls.chunkarg = chunkname ? chunkname : "?";
   ls.mode = mode;
-  lj_str_initbuf(&ls.sb);
+  lj_buf_init(L, &ls.sb);
   status = lj_vm_cpcall(L, NULL, &ls, cpparser);
   lj_lex_cleanup(L, &ls);
   lj_gc_check(L);
@@ -88,7 +89,7 @@ LUALIB_API int luaL_loadfilex(lua_State *L, const char *filename,
   int status;
   const char *chunkname;
   if (filename) {
-    ctx.fp = fopen(filename, "rb");
+    ctx.fp = _lua_fopen(filename, "rb");
     if (ctx.fp == NULL) {
       lua_pushfstring(L, "cannot open %s: %s", filename, strerror(errno));
       return LUA_ERRFILE;
@@ -159,7 +160,7 @@ LUALIB_API int luaL_loadstring(lua_State *L, const char *s)
 LUA_API int lua_dump(lua_State *L, lua_Writer writer, void *data)
 {
   cTValue *o = L->top-1;
-  api_check(L, L->top > L->base);
+  lj_checkapi(L->top > L->base, "top slot empty");
   if (tvisfunc(o) && isluafunc(funcV(o)))
     return lj_bcwrite(L, funcproto(funcV(o)), writer, data, 0);
   else

@@ -1,9 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <title>Frequently Asked Questions (FAQ)</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<meta name="Copyright" content="Copyright (C) 2005-2021">
+<meta charset="utf-8">
+<meta name="Copyright" content="Copyright (C) 2005-2022">
 <meta name="Language" content="en">
 <link rel="stylesheet" type="text/css" href="bluequad.css" media="screen">
 <link rel="stylesheet" type="text/css" href="bluequad-print.css" media="print">
@@ -40,16 +40,18 @@ dd { margin-left: 1.5em; }
 <a href="ext_ffi_semantics.html">FFI Semantics</a>
 </li></ul>
 </li><li>
+<a href="ext_buffer.html">String Buffers</a>
+</li><li>
 <a href="ext_jit.html">jit.* Library</a>
 </li><li>
 <a href="ext_c_api.html">Lua/C API</a>
+</li><li>
+<a href="ext_profiler.html">Profiler</a>
 </li></ul>
 </li><li>
 <a href="status.html">Status</a>
 </li><li>
 <a class="current" href="faq.html">FAQ</a>
-</li><li>
-<a href="http://wiki.luajit.org/">Wiki <span class="ext">&raquo;</span></a>
 </li><li>
 <a href="https://luajit.org/list.html">Mailing List <span class="ext">&raquo;</span></a>
 </li></ul>
@@ -61,8 +63,6 @@ dd { margin-left: 1.5em; }
 <ul style="padding: 0;">
 <li>The <a href="https://luajit.org/list.html"><span class="ext">&raquo;</span>&nbsp;LuaJIT mailing list</a> focuses on topics
 related to LuaJIT.</li>
-<li>The <a href="http://wiki.luajit.org/"><span class="ext">&raquo;</span>&nbsp;LuaJIT wiki</a> gathers community
-resources about LuaJIT.</li>
 <li>News about Lua itself can be found at the
 <a href="https://www.lua.org/lua-l.html"><span class="ext">&raquo;</span>&nbsp;Lua mailing list</a>.
 The mailing list archives are worth checking out for older postings
@@ -72,7 +72,7 @@ about LuaJIT.</li>
 and links to books and papers about Lua.</li>
 <li>The community-managed <a href="http://lua-users.org/wiki/"><span class="ext">&raquo;</span>&nbsp;Lua Wiki</a>
 has information about diverse topics.</li>
-</ul>
+</ul></dd>
 </dl>
 
 <dl id="tech">
@@ -116,9 +116,8 @@ Direct3D version 10 or higher do not show this behavior anymore.
 Consider testing your application with older versions, too.<br>
 
 Similarly, the Borland/Delphi runtime modifies the FPU control word and
-enables FP exceptions. Of course this violates the Windows ABI, too.
-Please check the Delphi docs for the Set8087CW method.
-
+enables FP exceptions. Of course, this violates the Windows ABI, too.
+Please check the Delphi docs for the Set8087CW method.</dd>
 </dl>
 
 <dl id="ctrlc">
@@ -127,14 +126,27 @@ Please check the Delphi docs for the Set8087CW method.
 ignored by compiled code. If your program is running in a tight loop
 and never falls back to the interpreter, the debug hook never runs and
 can't throw the "interrupted!" error.<br>
-You have to press Ctrl-C twice to get stop your program. That's similar
+You have to press Ctrl-C twice to stop your program. That's similar
 to when it's stuck running inside a C function under the Lua interpreter.</dd>
+</dl>
+
+<dl id="order">
+<dt>Q: Table iteration with <tt>pairs()</tt> does not result in the same order?</dt>
+<dd>The order of table iteration is explicitly <b>undefined</b> by
+the Lua language standard.<br>
+Different Lua implementations or versions may use different orders for
+otherwise identical tables. Different ways of constructing a table may
+result in different orders, too.<br>
+Due to improved VM security, LuaJIT 2.1 may even use a different order
+on separate VM invocations or when string keys are newly interned.<br><br>
+If your program relies on a deterministic order, it has a bug. Rewrite it,
+so it doesn't rely on the key order. Or sort the table keys, if you must.</dd>
 </dl>
 
 <dl id="sandbox">
 <dt>Q: Can Lua code be safely sandboxed?</dt>
 <dd>
-Maybe for an extremly restricted subset of Lua and if you relentlessly
+Maybe for an extremely restricted subset of Lua and if you relentlessly
 scrutinize every single interface function you offer to the untrusted code.<br>
 
 Although Lua provides some sandboxing functionality (<tt>setfenv()</tt>, hooks),
@@ -173,7 +185,7 @@ actively developed branches.</dd>
 </div>
 <div id="foot">
 <hr class="hide">
-Copyright &copy; 2005-2021
+Copyright &copy; 2005-2022
 <span class="noprint">
 &middot;
 <a href="contact.html">Contact</a>

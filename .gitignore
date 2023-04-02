@@ -1,4 +1,5 @@
 *.[oa]
+buildandroid/
 *.so
 build
 buildandroid
@@ -11,3 +12,6 @@ buildandroid
 *.dmp
 *.swp
 .tags
+
+#cmake
+/build/
